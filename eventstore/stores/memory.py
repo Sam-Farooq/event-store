@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Collection, Sequence
 
 from eventstore.errors import ConcurrencyError
-from eventstore.events import Event, Record, type_name, utcnow
+from eventstore.events import Event, Record, check_aggregate_id, type_name, utcnow
 from eventstore.stores.base import EventStore
 
 
@@ -33,6 +33,7 @@ class InMemoryEventStore(EventStore):
         expected_version: int,
         events: Sequence[Event],
     ) -> list[Record]:
+        check_aggregate_id(aggregate_id)
         if expected_version < 0:
             raise ValueError("expected_version cannot be negative")
         written: list[Record] = []

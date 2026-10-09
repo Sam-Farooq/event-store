@@ -10,6 +10,7 @@ from eventstore.errors import (
     ConcurrencyError,
     DuplicateEventType,
     EventStoreError,
+    InvalidAggregateId,
     ReplayGap,
     UnknownEventType,
 )
@@ -22,6 +23,7 @@ __all__ = [
     "DuplicateEventType",
     "Event",
     "EventStoreError",
+    "InvalidAggregateId",
     "Record",
     "ReplayGap",
     "Repository",

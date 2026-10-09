@@ -6,15 +6,36 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any, ClassVar, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from eventstore.errors import DuplicateEventType, UnknownEventType
+from eventstore.errors import DuplicateEventType, InvalidAggregateId, UnknownEventType
 
 _REGISTRY: dict[str, type[Event]] = {}
 
 
+FORBIDDEN_IN_ID = (".", "$")
+
+
 def utcnow() -> datetime:
     return datetime.now(UTC)
+
+
+def check_aggregate_id(value: str) -> str:
+    """Refuse an id the projection target could not address.
+
+    UUIDs, ULIDs and ObjectId hex all pass. A dotted or dollar-prefixed id
+    does not, and it has to be caught here rather than at the update, because
+    the in-memory target uses the id as a plain dict key and would never
+    notice.
+    """
+    if not value:
+        raise InvalidAggregateId("an aggregate id cannot be empty")
+    for character in FORBIDDEN_IN_ID:
+        if character in value:
+            raise InvalidAggregateId(
+                f"an aggregate id cannot contain {character!r}, it becomes a field path: {value!r}"
+            )
+    return value
 
 
 class Event(BaseModel):
@@ -89,6 +110,11 @@ class Record(BaseModel):
     payload: dict[str, Any]
     recorded_at: datetime
     position: str = Field(min_length=1)
+
+    @field_validator("aggregate_id")
+    @classmethod
+    def _usable_as_a_field_path(cls, value: str) -> str:
+        return check_aggregate_id(value)
 
     def to_event(self) -> Event:
         return rebuild(self.event_type, self.payload)

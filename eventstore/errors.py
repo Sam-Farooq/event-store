@@ -41,6 +41,16 @@ class ReplayGap(EventStoreError):
         self.found_version = found_version
 
 
+class InvalidAggregateId(EventStoreError, ValueError):
+    """An id that cannot be used as a MongoDB field path.
+
+    The projection guard stores a version per aggregate under `_seen.<id>`, so
+    the id becomes part of an update path. A dot in it addresses a nested
+    document instead of a key, which works until two ids overlap as a prefix
+    and then fails on a write nothing else explains.
+    """
+
+
 class UnknownEventType(EventStoreError):
     """A stored event names a type this process has no class for.
 

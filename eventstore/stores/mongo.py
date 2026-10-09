@@ -10,7 +10,7 @@ from pymongo import ASCENDING
 from pymongo.errors import BulkWriteError, DuplicateKeyError
 
 from eventstore.errors import ConcurrencyError
-from eventstore.events import Event, Record, type_name, utcnow
+from eventstore.events import Event, Record, check_aggregate_id, type_name, utcnow
 from eventstore.stores.base import EventStore
 
 if TYPE_CHECKING:  # pragma: no cover - import cost, not behaviour
@@ -101,6 +101,7 @@ class MongoEventStore(EventStore):
         expected_version: int,
         events: Sequence[Event],
     ) -> list[Record]:
+        check_aggregate_id(aggregate_id)
         if expected_version < 0:
             raise ValueError("expected_version cannot be negative")
         if not events:
