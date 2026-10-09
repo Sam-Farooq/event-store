@@ -74,7 +74,7 @@ async def test_the_mongo_store_refuses_before_it_writes() -> None:
 
 
 async def test_a_dotted_id_would_have_nested_the_seen_map() -> None:
-    """Why the check exists, demonstrated against the in-memory target.
+    """Why the check exists, shown against the in-memory target.
 
     The target keys `_seen` by aggregate id. Mongo keys it by the same string
     used as an update path, so `a.b` and `a` collide there and not here. The
