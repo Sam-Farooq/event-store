@@ -1,8 +1,8 @@
 """Event-sourced aggregates with storage behind an interface.
 
-The public surface is deliberately five names. Storage adapters live in
-`eventstore.stores`, `eventstore.snapshots` and `eventstore.projections`, so
-importing the domain side of this library pulls in no driver.
+Five names and the errors: Aggregate, Event, Record, Repository, event.
+Storage adapters live in `eventstore.stores`, `eventstore.snapshots` and
+`eventstore.projections`, so importing the domain side pulls in no driver.
 """
 
 from eventstore.aggregate import Aggregate
