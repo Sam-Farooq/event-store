@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# No services block, and no MongoDB. Storage sits behind an interface with an
+# in-memory implementation, and the Mongo adapter's tests assert the filter and
+# update documents it builds rather than the answers a server gives back. A
+# suite that needs a replica set to run is a suite that stops being run.
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: ruff check eventstore ledger tests
+      - run: pytest -q
+      # The README tells people to run this, so CI finds out first when it breaks.
+      - run: python -m ledger.demo
