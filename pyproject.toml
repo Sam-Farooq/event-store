@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "event-store"
-version = "0.4.0"
+# Pre-1.0 while the Mongo adapters have never run against a live server.
+version = "0.3.2"
 description = "Event-sourced aggregates on MongoDB: optimistic concurrency, replay, snapshots, idempotent projections"
 requires-python = ">=3.11"
 dependencies = [
