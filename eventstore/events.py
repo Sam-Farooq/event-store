@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from eventstore.errors import DuplicateEventType, UnknownEventType
 
-_REGISTRY: dict[str, type["Event"]] = {}
+_REGISTRY: dict[str, type[Event]] = {}
 
 
 def utcnow() -> datetime:
