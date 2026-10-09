@@ -8,6 +8,8 @@ import pytest
 
 from eventstore import Event, event
 from eventstore.aggregate import Aggregate
+from eventstore.events import Record
+from eventstore.snapshots import InMemorySnapshotStore
 from eventstore.stores import InMemoryEventStore
 
 
@@ -63,3 +65,21 @@ class Tally(Aggregate):
 @pytest.fixture
 def store() -> InMemoryEventStore:
     return InMemoryEventStore()
+
+
+@pytest.fixture
+def snapshots() -> InMemorySnapshotStore:
+    return InMemorySnapshotStore()
+
+
+class CountingStore(InMemoryEventStore):
+    """Records what each read actually had to fetch, so a test can assert it."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.read_sizes: list[int] = []
+
+    async def read(self, aggregate_id: str, *, from_version: int = 0) -> list[Record]:
+        records = await super().read(aggregate_id, from_version=from_version)
+        self.read_sizes.append(len(records))
+        return records
