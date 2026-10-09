@@ -9,6 +9,7 @@ import pytest
 from eventstore import Event, event
 from eventstore.aggregate import Aggregate
 from eventstore.events import Record
+from eventstore.projections.memory import InMemoryProjectionTarget
 from eventstore.snapshots import InMemorySnapshotStore
 from eventstore.stores import InMemoryEventStore
 
@@ -70,6 +71,11 @@ def store() -> InMemoryEventStore:
 @pytest.fixture
 def snapshots() -> InMemorySnapshotStore:
     return InMemorySnapshotStore()
+
+
+@pytest.fixture
+def target() -> InMemoryProjectionTarget:
+    return InMemoryProjectionTarget()
 
 
 class CountingStore(InMemoryEventStore):
