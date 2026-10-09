@@ -81,8 +81,9 @@ aggregate landed and not the multiple itself.
 `test_a_long_stream_loads_from_one_snapshot_plus_the_tail` appends 512 events
 one save at a time with the interval at 50. It asserts 10 snapshot writes, a
 latest snapshot at version 500, and that loading the aggregate afterwards reads
-exactly 12 records. Without a snapshot store the same test asserts a load reads
-all 60 of a 60-event stream.
+exactly 12 records. The test above it,
+`test_no_snapshot_store_means_every_load_is_a_full_replay`, drops the snapshot
+store and asserts a load reads all 60 of a 60-event stream.
 
 A snapshot is a cache of a fold and never a source of truth. Dropping the
 snapshot collection costs replay time and loses nothing. There is no schema
@@ -286,8 +287,10 @@ Worth reading, in order:
 
 - `test_the_second_writer_from_the_same_version_loses`, including that the
   losing batch leaves nothing behind
-- `test_a_second_pass_over_the_same_log_changes_nothing`, which asserts 11
-  mutations applied then 0 applied and 11 skipped
+- `test_a_second_pass_over_the_same_log_changes_nothing`, which asserts 0
+  applied and 11 skipped the second time through. The 11 applied on the first
+  pass is asserted next door, in
+  `test_a_first_pass_builds_both_read_models`
 - `test_a_crash_between_two_documents_leaves_the_other_applicable`, where a
   target fails partway through one record and the retry applies only what is
   missing
