@@ -222,9 +222,16 @@ python3.11 -m venv .venv
 .venv/bin/ruff check eventstore ledger tests
 ```
 
-`python -m ledger.demo` runs the whole library against the in-memory store:
+`python -m ledger.demo` runs the whole library against the in-memory store.
+Its whole output, nothing trimmed:
 
 ```
+ledger demo: in-memory store, no MongoDB, no network
+
+opened   a-1 Nadia GBP
+opened   a-2 Omar GBP
+opened   a-3 Priya USD
+
 a-1: 121 movements over 13 saves, balance 122140 at v122
 refused  a-2 cannot pay 90000 minor units out of a balance of 25000
 conflict a-2 was at a different version: expected 2, version 3 already exists
@@ -236,7 +243,11 @@ loading a-1: snapshot v101 plus 21 events replayed
 catchup 1: 128 records, 253 applied, 0 skipped
 catchup 2: 128 records, 0 applied, 253 skipped
 
+account_balance/a-1: owner Nadia balance 122140 credits 120 debits 1
+account_balance/a-2: owner Omar balance 25500 credits 2 debits 0
+account_balance/a-3: owner Priya balance 38750 credits 1 debits 1
 currency_totals/GBP: net 147640 movements 123 seen 2 account(s)
+currency_totals/USD: net 38750 movements 2 seen 1 account(s)
 ```
 
 The two catchup lines are the point of the whole repo. The same 128 records,
