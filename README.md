@@ -259,17 +259,23 @@ Not a runnable command here, and it needs a replica set, because `watch` reads
 the oplog and a standalone `mongod` has none.
 
 ```python
-from eventstore.projections.mongo import MongoProjectionTarget
+from eventstore import Repository
+from eventstore.projections import MongoProjectionTarget, ProjectionRunner
 from eventstore.snapshots import MongoSnapshotStore
 from eventstore.stores import MongoEventStore, connect
+from ledger import AccountBalance, LedgerAccount
 
 db = connect("mongodb://localhost:27017/?replicaSet=rs0")
 store = MongoEventStore(db.events)
-await store.create_indexes()          # nothing above holds without this
+await store.create_indexes()  # nothing above holds without this
+
+accounts = Repository(
+    store, LedgerAccount, snapshots=MongoSnapshotStore(db.snapshots), snapshot_every=50
+)
 
 runner = ProjectionRunner(MongoProjectionTarget(db.projections), [AccountBalance()])
-await runner.catchup(store)                    # the backlog
-await runner.consume(store.follow())           # then the change stream
+await runner.catchup(store)  # the backlog
+await runner.consume(store.follow())  # then the change stream
 ```
 
 `connect` passes `tz_aware=True`. Without it stored datetimes come back naive,
