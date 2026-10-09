@@ -57,9 +57,7 @@ class FakeCollection:
         self.index_calls.append((keys, options))
         return str(options.get("name", "unnamed"))
 
-    async def insert_many(
-        self, documents: Sequence[dict[str, Any]], ordered: bool = True
-    ) -> None:
+    async def insert_many(self, documents: Sequence[dict[str, Any]], ordered: bool = True) -> None:
         self.insert_calls.append((list(documents), ordered))
         if self.raise_on_insert is not None:
             raise self.raise_on_insert

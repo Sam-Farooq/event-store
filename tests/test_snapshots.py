@@ -85,12 +85,8 @@ async def test_an_aggregate_that_opts_out_of_snapshots_gets_none() -> None:
 
 async def test_an_older_snapshot_cannot_overwrite_a_newer_one() -> None:
     snapshots = InMemorySnapshotStore()
-    newer = Snapshot(
-        aggregate_id="t-1", aggregate_type="tally", version=9, state={"total": 9}
-    )
-    older = Snapshot(
-        aggregate_id="t-1", aggregate_type="tally", version=4, state={"total": 4}
-    )
+    newer = Snapshot(aggregate_id="t-1", aggregate_type="tally", version=9, state={"total": 9})
+    older = Snapshot(aggregate_id="t-1", aggregate_type="tally", version=4, state={"total": 4})
     assert await snapshots.save(newer) is True
     assert await snapshots.save(older) is False
     assert await snapshots.save(newer) is False

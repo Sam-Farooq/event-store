@@ -204,8 +204,7 @@ Events register under a string, not a class name:
 
 ```python
 @event("ledger.deposited")
-class Deposited(Event):
-    ...
+class Deposited(Event): ...
 ```
 
 The string is what gets stored. Renaming the class is then a refactor rather
@@ -220,6 +219,7 @@ python3.11 -m venv .venv
 .venv/bin/python -m ledger.demo
 .venv/bin/python -m pytest -q
 .venv/bin/ruff check eventstore ledger tests
+.venv/bin/ruff format --check .
 ```
 
 `python -m ledger.demo` runs the whole library against the in-memory store.

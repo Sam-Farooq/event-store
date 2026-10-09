@@ -202,9 +202,7 @@ async def test_a_crash_between_two_documents_leaves_the_other_applicable(
             if projection == self.fail_on:
                 self.fail_on = None
                 raise RuntimeError(f"{projection} is unreachable")
-            return await super().apply(
-                projection=projection, record=record, mutations=mutations
-            )
+            return await super().apply(projection=projection, record=record, mutations=mutations)
 
     await seed(store)
     target = FlakyTarget("currency_totals")

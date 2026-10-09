@@ -63,17 +63,13 @@ class LedgerAccount(Aggregate):
 
     def deposit(self, minor_units: int, *, reference: str) -> None:
         self._require_usable()
-        self.record(
-            Deposited(minor_units=minor_units, currency=self.currency, reference=reference)
-        )
+        self.record(Deposited(minor_units=minor_units, currency=self.currency, reference=reference))
 
     def withdraw(self, minor_units: int, *, reference: str) -> None:
         self._require_usable()
         if minor_units > self.balance:
             raise InsufficientFunds(self.id, minor_units, self.balance)
-        self.record(
-            Withdrawn(minor_units=minor_units, currency=self.currency, reference=reference)
-        )
+        self.record(Withdrawn(minor_units=minor_units, currency=self.currency, reference=reference))
 
     def close(self, *, reason: str) -> None:
         self._require_usable()

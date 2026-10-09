@@ -177,8 +177,6 @@ class MongoEventStore(EventStore):
         matched: dict[str, Any] = {"operationType": "insert"}
         if event_types is not None:
             matched["fullDocument.event_type"] = {"$in": sorted(event_types)}
-        async with self._events.watch(
-            [{"$match": matched}], resume_after=resume_after
-        ) as stream:
+        async with self._events.watch([{"$match": matched}], resume_after=resume_after) as stream:
             async for change in stream:
                 yield to_record(change["fullDocument"])

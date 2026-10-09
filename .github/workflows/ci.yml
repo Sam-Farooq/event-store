@@ -19,6 +19,7 @@ jobs:
           python-version: "3.11"
       - run: pip install -e ".[dev]"
       - run: ruff check eventstore ledger tests
+      - run: ruff format --check .
       - run: pytest -q
       # The README tells people to run this, so CI finds out first when it breaks.
       - run: python -m ledger.demo

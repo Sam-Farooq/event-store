@@ -33,9 +33,7 @@ class ReplayGap(EventStoreError):
     """
 
     def __init__(self, aggregate_id: str, expected_version: int, found_version: int) -> None:
-        super().__init__(
-            f"{aggregate_id} expected version {expected_version}, got {found_version}"
-        )
+        super().__init__(f"{aggregate_id} expected version {expected_version}, got {found_version}")
         self.aggregate_id = aggregate_id
         self.expected_version = expected_version
         self.found_version = found_version

@@ -203,9 +203,7 @@ async def test_a_mutation_with_no_inc_sends_no_inc_operator() -> None:
 
 
 async def test_an_upsert_that_collides_counts_as_already_applied() -> None:
-    collection = FakeCollection(
-        raise_on_update=DuplicateKeyError("E11000", 11000, {"index": 0})
-    )
+    collection = FakeCollection(raise_on_update=DuplicateKeyError("E11000", 11000, {"index": 0}))
     applied = await MongoProjectionTarget(collection).apply(
         projection="totals",
         record=to_record(stored(2)),
@@ -238,9 +236,7 @@ async def test_a_snapshot_is_written_only_over_an_older_version() -> None:
 
 
 async def test_a_snapshot_losing_to_a_newer_one_is_not_an_error() -> None:
-    collection = FakeCollection(
-        raise_on_update=DuplicateKeyError("E11000", 11000, {"index": 0})
-    )
+    collection = FakeCollection(raise_on_update=DuplicateKeyError("E11000", 11000, {"index": 0}))
     assert (
         await MongoSnapshotStore(collection).save(
             Snapshot(aggregate_id="t-1", aggregate_type="tally", version=9, state={})
